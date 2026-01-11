@@ -35,8 +35,8 @@ Clone o repositório:
 
 Bash
 
-git clone https://github.com/SEU_USUARIO/NOME_DO_REPOSITORIO.git
-cd NOME_DO_REPOSITORIO
+git clone https://github.com/pablo-mallmann/Biblioteca_web.git
+cd Biblioteca_web
 Crie e ative um ambiente virtual:
 
 Bash
@@ -80,3 +80,4 @@ Observações para o Desenvolvedor
 Mídias: As imagens das capas de livros são armazenadas localmente na pasta midia/ e não são enviadas para o repositório por questões de privacidade e economia de espaço.
 
 IDs: O sistema utiliza identificadores únicos (IDs) visíveis para diferenciar usuários homônimos e edições diferentes do mesmo livro.
+
