@@ -1,0 +1,116 @@
+{% extends 'acervo/base.html' %}
+
+{% block title %}Acervo - Biblioteca Comunitária{% endblock %}
+
+{% block content %}
+<style>
+    .livro-card { 
+        background: white;
+        border: 1px solid #ddd; 
+        padding: 20px; 
+        margin-bottom: 15px; 
+        border-radius: 8px; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .livro-card:hover { border-color: #007bff; }
+    
+    .status-disponivel { color: #28a745; font-weight: bold; }
+    .status-emprestado { color: #dc3545; font-weight: bold; }
+
+    .busca-container { margin-bottom: 30px; }
+    
+    .busca-form {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    input[type="text"] { 
+        padding: 10px; 
+        width: 300px; 
+        border: 1px solid #ccc; 
+        border-radius: 4px; 
+        height: 40px;
+        box-sizing: border-box;
+    }
+
+    .btn-busca { 
+        padding: 0 20px; 
+        background: #2c3e50; 
+        color: white; 
+        border: none; 
+        border-radius: 4px; 
+        cursor: pointer; 
+        font-weight: bold;
+        height: 40px; 
+        display: flex;
+        align-items: center;
+    }
+    .btn-busca:hover { background: #34495e; }
+
+    .btn-acao-topo {
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        height: 40px; /* Alinhado com o input */
+        font-size: 0.9em;
+        transition: opacity 0.3s;
+        box-sizing: border-box;
+    }
+    .btn-acao-topo:hover { opacity: 0.9; }
+
+    .bg-livro { background: #27ae60; }
+    .bg-emprestimo { background: #8e44ad; }
+    .bg-baixa { background: #BA8E23; }
+
+    .link-voltar { display: inline-block; margin-bottom: 15px; text-decoration: none; color: #6c757d; }
+</style>
+
+<a href="{% url 'dashboard' %}" class="link-voltar">← Voltar ao Painel</a>
+
+<h1> {{ titulo_personalizado|default:"Acervo da Biblioteca" }}</h1>
+
+<div class="busca-container">
+    <form method="GET" action="{% url 'lista_livros' %}" class="busca-form">
+        <input type="text" name="busca" placeholder="Título, gênero, autor ou ID..." value="{{ request.GET.busca }}">
+        
+        <button type="submit" class="btn-busca">Pesquisar</button>
+
+        <a href="/admin/acervo/livro/add/" target="_blank" class="btn-acao-topo bg-livro">
+            ➕ Cadastrar Livro
+        </a>
+
+        <a href="/admin/acervo/emprestimo/add/" target="_blank" class="btn-acao-topo bg-emprestimo">
+            📑 Novo Empréstimo
+        </a>
+
+        <a href="{% url 'livros_emprestados' %}" class="btn-acao-topo bg-baixa">
+            📕 Baixar Empréstimo
+        </a>
+    </form>
+</div>
+
+<hr>
+
+{% for livro in livros %}
+    <div class="livro-card">
+        <h3>
+            <a href="{% url 'detalhe_livro' livro.id %}" style="text-decoration: none; color: #007bff;">{{ livro.titulo }}</a> 
+            (ID: {{ livro.id }})
+        </h3>
+        <p><strong>Autor:</strong> {{ livro.autor }} | <strong>Gênero:</strong> {{ livro.genero }}</p>
+        <p>Status: 
+            <span class="{% if 'Disponível' in livro.status %}status-disponivel{% else %}status-emprestado{% endif %}">
+                {{ livro.status }}
+            </span>
+        </p>
+    </div>
+{% empty %}
+    <p>Nenhum livro encontrado.</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,17 @@
+db.sqlite3
+
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+
+midia/
+static_files/
+
+.vscode/
+.idea/
+
+build/
+dist/
+*.spec

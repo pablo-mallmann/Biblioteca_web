@@ -1,0 +1,72 @@
+{% extends 'acervo/base.html' %}
+
+{% block title %}Perfil: {{ usuario.nome }}{% endblock %}
+
+{% block content %}
+<style>
+    .perfil-header { 
+        background: #e9ecef; 
+        padding: 25px; 
+        border-radius: 8px; 
+        margin-bottom: 30px;
+        border-left: 5px solid #2c3e50;
+    }
+    .voltar-link { 
+        display: inline-block; 
+        margin-bottom: 20px; 
+        text-decoration: none; 
+        color: #007bff; 
+    }
+    .voltar-link:hover { text-decoration: underline; }
+
+    .tabela-historico th {
+        background-color: #343a40;
+        color: white;
+    }
+</style>
+
+<a href="{% url 'lista_usuarios' %}" class="voltar-link">← Voltar para a lista de usuários</a>
+
+<div class="perfil-header">
+    <h1>{{ usuario.nome }}</h1>
+    <p><strong>CPF:</strong> {{ usuario.cpf }}</p>
+    <p><strong>Telefone:</strong> {{ usuario.telefone }}</p>
+    <p><strong>Endereço:</strong> {{ usuario.endereco }}</p>
+    {% if usuario.observacao %}
+    <p style="margin-top: 15px;"><strong>Observação:</strong> {{ usuario.observacao }}</p>
+{% endif %}
+</div>
+
+<h2>Histórico de Empréstimos</h2>
+
+<table class="tabela-historico">
+    <thead>
+        <tr>
+            <th>Livro</th>
+            <th>Data de Saída</th>
+            <th>Previsão Devolução</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for registro in historico %}
+        <tr>
+            <td><a href="{% url 'detalhe_livro' registro.livro.id %}">{{ registro.livro.titulo }}</a></td>
+            <td>{{ registro.data_saida|date:"d/m/Y" }}</td>
+            <td>{{ registro.data_previsao_devolucao|date:"d/m/Y" }}</td>
+            <td>
+                {% if registro.data_devolucao_real %}
+                    <span style="color: #28a745;">✅ Devolvido em {{ registro.data_devolucao_real|date:"d/m/Y" }}</span>
+                {% else %}
+                    <strong style="color: #e67e22;">⏳ Em posse do usuário</strong>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" style="text-align: center;">Este usuário ainda não realizou empréstimos.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
