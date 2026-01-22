@@ -18,10 +18,10 @@ def gerar_dados():
     ruas = ['Rua das Flores', 'Av. Central', 'Rua Sete de Setembro', 'Rua XV de Novembro', 'Av. Brasil']
     bairros = ['Centro', 'Bairro Operário', 'Jardim América', 'Vila Nova', 'Planalto']
     
-    print("Gerando 250 usuários...")
+    print("Gerando usuários...")
     cpfs_gerados = set() 
 
-    for i in range(250):
+    for i in range(250): # Quantidade de usuarios a gerar
         nome_completo = f"{random.choice(nomes)} {random.choice(sobrenomes)} {random.choice(sobrenomes)}"
         email = f"user{i}_{random.randint(1000, 9999)}@email.com"
         telefone = f"(51) 9{random.randint(8000, 9999)}-{random.randint(1000, 9999)}"
@@ -37,10 +37,9 @@ def gerar_dados():
             email=email, 
             telefone=telefone,
             endereco=endereco,
-            cpf=cpf # Campo adicionado para satisfazer a restrição UNIQUE
+            cpf=cpf 
         )
 
-    # --- Gerar 950 Livros ---
     titulos_base = [
         ('Dom Casmurro', 'Machado de Assis'), ('1984', 'George Orwell'), 
         ('O Pequeno Príncipe', 'Antoine de Saint-Exupéry'), ('A Hora da Estrela', 'Clarice Lispector'),
@@ -49,8 +48,8 @@ def gerar_dados():
     ]
     generos = ['Ficção', 'Romance', 'Terror', 'Biografia', 'História', 'Ciência']
 
-    print("Gerando 950 livros...")
-    for i in range(0):
+    print("Gerando livros...")
+    for i in range(0): # Quantidade de livros a gerar
         base = random.choice(titulos_base)
         titulo = f"{base[0]} - Edição {i+1}"
         autor = base[1]
