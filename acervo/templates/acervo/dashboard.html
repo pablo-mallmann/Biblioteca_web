@@ -5,7 +5,7 @@
 {% block content %}
 <style>
     .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 40px; }
-    .stat-card { padding: 20px; border-radius: 8px; color: white; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .stat-card { padding: 20px; border-radius: 10px; color: white; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     .bg-blue { background: #3498db; }
     .bg-green { background: #2ecc71; }
     .bg-orange { background: #e67e22; }
@@ -17,9 +17,10 @@
         display: inline-block; padding: 12px 20px; background: #2c3e50; color: white; 
         text-decoration: none; border-radius: 5px; font-weight: bold; margin-right: 10px; margin-bottom: 10px;
     }
-    .btn-acao:hover { background: #34495e; }
+    .btn-acao:hover {  background: #3498db !important; }
 
     .alerta-atraso { border-left: 5px solid #e74c3c; background-color: #fdf2f2; margin-bottom: 30px; }
+    
 </style>
 
 <h1>Painel de Controle</h1>
@@ -82,6 +83,7 @@
     <a href="/admin/acervo/usuario/add/" target="_blank" class="btn-acao" style="background: #2980b9;">👤 Cadastrar Usuário</a>
     <a href="/admin/acervo/emprestimo/add/" target="_blank" class="btn-acao" style="background: #8e44ad;">📖 Novo Empréstimo</a>
     <a href="{% url 'livros_emprestados' %}" class="btn-acao" style="background: #BA8E23;">📕 Baixar Empréstimo</a>
+    
 
 </div>
 

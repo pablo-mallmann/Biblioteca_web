@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import Livro, Emprestimo, Usuario 
 from django.db.models import Q
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 def dashboard(request):
     hoje = timezone.now().date()
@@ -27,30 +28,37 @@ def dashboard(request):
     return render(request, 'acervo/dashboard.html', contexto)
 
 def livros_emprestados(request):
-    
     livros = Livro.objects.filter(
         emprestimo__data_devolucao_real__isnull=True
     ).exclude(
         emprestimo__isnull=True
-    ).distinct()
+    ).distinct().order_by('titulo')
     
     return render(request, 'acervo/lista_livros.html', {
         'livros': livros, 
-        'titulo_personalizado': 'Emprestimos em andamento'
+        'titulo_personalizado': 'Empréstimos em andamento'
     })
 
 def lista_livros(request):
     query = request.GET.get('busca')
     if query:
-        livros = Livro.objects.filter(
+        livros_list = Livro.objects.filter(
             Q(titulo__icontains=query) | 
             Q(autor__icontains=query) | 
             Q(genero__icontains=query) | 
             Q(id__iexact=query)
-        )
+        ).order_by('titulo')
     else:
-        livros = Livro.objects.all()
-    return render(request, 'acervo/lista_livros.html', {'livros': livros})
+        livros_list = Livro.objects.all().order_by('titulo')
+    
+    paginator = Paginator(livros_list, 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'acervo/lista_livros.html', {
+        'livros': page_obj, 
+        'busca': query
+    })
 
 def detalhe_livro(request, livro_id):
     livro = get_object_or_404(Livro, id=livro_id)
@@ -60,14 +68,22 @@ def detalhe_livro(request, livro_id):
 def lista_usuarios(request):
     query = request.GET.get('busca')
     if query:
-        usuarios = Usuario.objects.filter(
+        usuarios_list = Usuario.objects.filter(
             Q(nome__icontains=query) | 
             Q(cpf__icontains=query) | 
             Q(id__iexact=query)
-        )
+        ).order_by('nome')
     else:
-        usuarios = Usuario.objects.all()
-    return render(request, 'acervo/lista_usuarios.html', {'usuarios': usuarios})
+        usuarios_list = Usuario.objects.all().order_by('nome')
+    
+    paginator = Paginator(usuarios_list, 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'acervo/lista_usuarios.html', {
+        'usuarios': page_obj, 
+        'busca': query
+    })
 
 def detalhe_usuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)

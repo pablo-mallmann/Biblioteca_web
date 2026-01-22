@@ -4,9 +4,7 @@
 
 {% block content %}
 <style>
-    .header-lista {
-        margin-bottom: 20px;
-    }
+    .header-lista { margin-bottom: 20px; }
 
     .user-card { 
         background: white; 
@@ -18,9 +16,7 @@
     }
     .user-card:hover { border-color: #007bff; }
     
-    .busca-container { 
-        margin-bottom: 30px; 
-    }
+    .busca-container { margin-bottom: 30px; }
 
     .busca-form {
         display: flex;
@@ -34,17 +30,21 @@
         width: 300px; 
         border-radius: 4px; 
         border: 1px solid #ccc; 
+        height: 40px;
+        box-sizing: border-box;
     }
 
     .btn-busca { 
         background: #2c3e50; 
         color: white; 
         border: none; 
-        padding: 10px 20px; 
+        padding: 0 20px; 
         border-radius: 4px; 
         cursor: pointer; 
         font-weight: bold;
         height: 40px;
+        display: flex;
+        align-items: center;
     }
     .btn-busca:hover { background: #34495e; }
 
@@ -63,6 +63,47 @@
     .btn-novo:hover { background: #2471a3; opacity: 0.9; }
     
     .link-voltar { display: inline-block; margin-bottom: 15px; text-decoration: none; color: #6c757d; }
+
+    .pagination {
+        margin: 30px 0;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .pagination a, .pagination span.current {
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .pagination a {
+        background-color: white;
+        color: #2c3e50;
+        border: 1px solid #ddd;
+        transition: all 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #f1f1f1;
+        border-color: #2c3e50;
+    }
+
+    .pagination span.current {
+        background-color: #2c3e50;
+        color: white;
+        border: 1px solid #2c3e50;
+    }
+
+    .info-paginas {
+        margin-top: 10px;
+        color: #666;
+        font-size: 0.9em;
+        text-align: center;
+    }
 </style>
 
 <a href="{% url 'dashboard' %}" class="link-voltar">← Voltar ao Painel</a>
@@ -73,7 +114,7 @@
 
 <div class="busca-container">
     <form method="GET" action="{% url 'lista_usuarios' %}" class="busca-form">
-        <input type="text" name="busca" placeholder="Nome, CPF ou ID..." value="{{ request.GET.busca }}">
+        <input type="text" name="busca" placeholder="Nome, CPF ou ID..." value="{{ busca|default:'' }}">
         
         <button type="submit" class="btn-busca">Pesquisar</button>
         
@@ -98,4 +139,27 @@
 {% empty %}
     <p>Nenhum usuário encontrado.</p>
 {% endfor %}
+
+{% if usuarios.has_other_pages %}
+<div class="pagination">
+    {% if usuarios.has_previous %}
+        <a href="?page=1{% if busca %}&busca={{ busca }}{% endif %}">&laquo; Primeira</a>
+        <a href="?page={{ usuarios.previous_page_number }}{% if busca %}&busca={{ busca }}{% endif %}">Anterior</a>
+    {% endif %}
+
+    <span class="current">
+        {{ usuarios.number }}
+    </span>
+
+    {% if usuarios.has_next %}
+        <a href="?page={{ usuarios.next_page_number }}{% if busca %}&busca={{ busca }}{% endif %}">Próxima</a>
+        <a href="?page={{ usuarios.paginator.num_pages }}{% if busca %}&busca={{ busca }}{% endif %}">Última &raquo;</a>
+    {% endif %}
+</div>
+<div class="info-paginas">
+    Página {{ usuarios.number }} de {{ usuarios.paginator.num_pages }} 
+    (Total de {{ usuarios.paginator.count }} usuários cadastrados)
+</div>
+{% endif %}
+
 {% endblock %}
